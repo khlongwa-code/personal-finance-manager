@@ -200,4 +200,4 @@ jobs:
           echo "tag_name=$TAG_NAME" >> $GITHUB_ENV
 
       - name: Notify about a new tag
-        run: echo "New tag created: ${{ env.tag_name }}"
+        run: echo "New tag created- ${{ steps.create_tag.outputs.tag_name }}"
