@@ -1,27 +1,33 @@
-# Use a base image with JDK installed
-FROM eclipse-temurin:17-jdk-alpine as builder
+# Use Maven official image with JDK 17 as the base image
+FROM maven:3.8.7-openjdk-17 AS builder
 
-# Set the working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Copy the pom.xml and source code
+# Copy the pom.xml file and download dependencies
 COPY pom.xml .
+
+# Download dependencies without running the tests
+RUN mvn dependency:go-offline
+
+# Copy the project source code
 COPY src ./src
 
-# Build the application
+# Build the application without running tests
 RUN mvn clean package -DskipTests
 
-# Use a lightweight image to run the application
-FROM eclipse-temurin:17-jre-alpine
+# Use a lightweight JDK image for runtime
+FROM openjdk:17-jdk-slim
 
-# Set the working directory
+# Set working directory
 WORKDIR /app
 
-# Copy the built JAR file from the builder stage
-COPY --from=builder /app/target/personal-finance-manager-1.0-SNAPSHOT-jar-with-dependencies.jar ./app.jar
+# Copy the packaged JAR file from the build stage
+COPY --from=builder /app/target/personal-finance-manager-1.0-SNAPSHOT-jar-with-dependencies.jar /app/app.jar
 
-# Expose the port the app runs on (change as needed)
+# Expose the port the app runs on
 EXPOSE 8080
 
 # Command to run the application
-CMD ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+
