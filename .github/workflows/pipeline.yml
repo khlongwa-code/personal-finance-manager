@@ -160,7 +160,7 @@ jobs:
         shell: bash
   
   docker_build_push:
-    needs: accptance_tests
+    needs: acceptance_tests  # Fixed typo here
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -175,12 +175,12 @@ jobs:
       - name: Build Docker Image
         run: |
           echo "Building Docker image..."
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/personal-finance-manager:latest
-      
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/personal-finance-manager:latest .
+
       - name: Push Docker Image
         run: |
-          echo "Push Docker image..."
-          docker push -t ${{ secrets.DOCKER_USERNAME }}/personal-finance-manager:latest
+          echo "Pushing Docker image..."
+          docker push ${{ secrets.DOCKER_USERNAME }}/personal-finance-manager:latest
   
   tag:
     needs: docker_build_push
