@@ -224,4 +224,3 @@ jobs:
 
       - name: Notify about a new tag
         run: echo "New tag created- ${{ steps.create_tag.outputs.tag_name }}"
-        
