@@ -27,8 +27,9 @@ public class Register extends Actions{
 
         String userFirstName = userData.getString("firstname");
         String userLastName = userData.getString("lastname");
+        String userPassword = userData.getString("password");
 
-        dai.createUser(userFirstName, userLastName, userEmail);
+        dai.createUser(userFirstName, userLastName, userEmail, userPassword);
         
         return Response.register("OK", "Registration successful!");
     }

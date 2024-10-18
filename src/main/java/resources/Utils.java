@@ -30,4 +30,14 @@ public class Utils {
         
         return null;
     }
+
+    /**
+     * Compares the hashed password from the database, to a hash of a plaintext password
+     * @param plainPassword password entered by the user
+     * @param hashedPassword password from the database
+     * @return true if password matches,  else false
+     */
+    public static boolean passwordMatcher(String plainPassword, String hashedPassword) {
+        return hashPassword(plainPassword).equals(hashedPassword);
+    }
 }

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import resources.SimulationClient;
+import resources.Utils;
 import resources.JsonClient;
 
 public class RegistrationTests {
@@ -31,19 +32,21 @@ public class RegistrationTests {
     public void testSuccessfulRegistration() {
 
         assertTrue(serverClient.isConnected());
+         
+        String password = Utils.hashPassword("R2g@ff?G8");
+        String requestJson = "{" +
+            "\"action\": \"register\"," +
+            "\"data\": {" +
+                "\"firstname\": \"Kusasalakhe\"," +
+                "\"lastname\": \"Hlongwa\"," +
+                "\"email\": \"kusasalakhe.hlongwa@example.com\"," +
+                "\"password\": \"" + password + "\"" +
+            "}" +
+        "}";
 
-         String requestJson = "{" +
-             "\"action\": \"register\"," +
-             "\"data\": {" +
-                 "\"firstname\": \"Kusasalakhe\"," +
-                 "\"lastname\": \"Hlongwa\"," +
-                 "\"email\": \"kusasalakhe.hlongwa@example.com\"" +
-             "}" +
-         "}";
+        JsonNode response = serverClient.sendRequest(requestJson);
 
-         JsonNode response = serverClient.sendRequest(requestJson);
-
-         assertEquals("OK", response.get("status").asText());
+        assertEquals("OK", response.get("status").asText());
     }
 
     @Test
@@ -51,28 +54,31 @@ public class RegistrationTests {
 
         assertTrue(serverClient.isConnected());
 
-         String requestJson = "{" +
-             "\"action\": \"register\"," +
-             "\"data\": {" +
-                 "\"firstname\": \"suguru\"," +
-                 "\"lastname\": \"geto\"," +
-                 "\"email\": \"sgeto@example.com\"" +
-             "}" +
-         "}";
+        String password = Utils.hashPassword("R2g@ff?G8");
+        String requestJson = "{" +
+            "\"action\": \"register\"," +
+            "\"data\": {" +
+                "\"firstname\": \"suguru\"," +
+                "\"lastname\": \"geto\"," +
+                "\"email\": \"sgeto@example.com\"," +
+                "\"password\": \"" + password + "\"" +
+            "}" +
+        "}";
 
-         String requestJson2 = "{" +
-             "\"action\": \"register\"," +
-             "\"data\": {" +
-                 "\"firstname\": \"suguru\"," +
-                 "\"lastname\": \"geto\"," +
-                 "\"email\": \"sgeto@example.com\"" +
-             "}" +
-         "}";
+        String requestJson2 = "{" +
+            "\"action\": \"register\"," +
+            "\"data\": {" +
+                "\"firstname\": \"suguru\"," +
+                "\"lastname\": \"geto\"," +
+                "\"email\": \"sgeto@example.com\"," +
+                "\"password\": \"" + password + "\"" +
+            "}" +
+        "}";
 
-         serverClient.sendRequest(requestJson);
+        serverClient.sendRequest(requestJson);
 
-         JsonNode response = serverClient.sendRequest(requestJson2);
+        JsonNode response = serverClient.sendRequest(requestJson2);
 
-         assertEquals("ERROR", response.get("status").asText());
+        assertEquals("ERROR", response.get("status").asText());
     }
 }

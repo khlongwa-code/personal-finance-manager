@@ -9,6 +9,7 @@ public class UserInputs {
     private String firstName;
     private String lastName;
     private String email;
+    private String password;
     private final UserInputsValidator validator;
     private Request request;
     private Scanner scanner;
@@ -23,15 +24,16 @@ public class UserInputs {
         String firstName = getUserFirstName();
         String lastName = getUserLastName();
         String email = getUserEmail();
+        String password = setUserPassword().trim();
 
-        return request.register(firstName, lastName, email);
+        return request.register(firstName, lastName, email, password);
     }
 
     public String loginInfo() {
         String email = getUserEmail();
-        String password = getUserPassword();
+        String password = getUserPassword().trim();
 
-        return request.login(email, "null");
+        return request.login(email, password);
     }
 
     public String userCommands() {
@@ -78,8 +80,45 @@ public class UserInputs {
         }
     }
 
+    public String setUserPassword() {
+        String password1 = "";
+        String password2 = "";
+
+        while (true) {
+            System.out.println("Enter passsword: ");
+            password1 = scanner.nextLine();
+
+            System.out.println("Confirm passsword: ");
+            password2 = scanner.nextLine();
+
+            if (!password1.equals(password2)) {
+                System.out.println("Password mismatch, try again!");
+                continue;
+            }
+
+            if (validator.isValidPassword(password1)) {
+                this.password = password1;
+                return this.password;
+            } else {
+                System.out.println("Invalid password!");
+            }
+        }
+    }
+
     public String getUserPassword() {
-        return null;
+        String password = "";
+
+        while (true) {
+            System.out.println("Enter passsword: ");
+            password = scanner.nextLine();
+
+            if (validator.isValidPassword(password)) {
+                this.password = password;
+                return this.password;
+            } else {
+                System.out.println("Invalid password!");
+            }
+        }
     }
 
     public String handleUserInputs(String userInput) {

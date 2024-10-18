@@ -10,6 +10,7 @@ public interface DataAccessInterface extends BaseQuery {
         + "name TEXT NOT NULL, "
         + "surname TEXT NOT NULL, "
         + "email TEXT NOT NULL UNIQUE, "
+        + "password TEXT NOT NULL, "
         + "created_at DATETIME DEFAULT CURRENT_TIMESTAMP"
         +")")
     public void createUsersTable();
@@ -65,12 +66,15 @@ public interface DataAccessInterface extends BaseQuery {
         + ")")
     public void createTransactionsTable();
 
-    @Update("INSERT INTO users (name, surname, email) VALUES (?{1}, ?{2}, ?{3})")
-    public void createUser(String name, String surname, String email);
+    @Update("INSERT INTO users (name, surname, email, password) VALUES (?{1}, ?{2}, ?{3}, ?{4})")
+    public void createUser(String name, String surname, String email, String password);
 
     @Select("SELECT id FROM users WHERE email = ?{1}")
     public Integer getUserId(String email);
 
     @Select("SELECT COUNT(*) FROM users WHERE email = ?{1}")
     public Integer emailExists(String email);
+
+    @Select("SELECT password FROM users WHERE email = ?{1}")
+    public String getUserPassword(String email);
 }

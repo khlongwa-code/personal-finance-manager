@@ -43,5 +43,16 @@ public class UserInputTest {
 
         assertEquals("jcole@gmail.com", userInput.getUserEmail());
     }
+
+    @Test
+    public void testIncorrectPasswordsThenCorrect() {
+        String simulatedInput = "123\njcole@gmail\nRb12@gl?]";
+        InputStream in = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(in);
+
+        UserInputs userInput = new UserInputs();
+
+        assertEquals("Rb12@gl?]", userInput.getUserPassword());
+    }
 }
 

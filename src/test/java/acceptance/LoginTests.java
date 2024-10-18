@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import resources.SimulationClient;
+import resources.Utils;
 import resources.JsonClient;
 
 public class LoginTests {
@@ -20,13 +21,14 @@ public class LoginTests {
     @BeforeEach
     public void connectToServer() {
         serverClient.connect(DEFAULT_IP, DEFAULT_PORT);
-
+        String password = Utils.hashPassword("R2g@ff?G8");
         String requestRegister = "{" +
              "\"action\": \"register\"," +
              "\"data\": {" +
                  "\"firstname\": \"john\"," +
                  "\"lastname\": \"cena\"," +
-                 "\"email\": \"jcena@gmail.com\"" +
+                 "\"email\": \"jcena@gmail.com\"," +
+                 "\"password\": \"" + password + "\"" +
              "}" +
          "}";
 
@@ -47,7 +49,7 @@ public class LoginTests {
              "\"action\": \"login\"," +
              "\"data\": {" +
                  "\"email\": \"jcena@gmail.com\"," +
-                 "\"password\": \"null\"" +
+                 "\"password\": \"R2g@ff?G8\"" +
              "}" +
          "}";
 
@@ -64,7 +66,7 @@ public class LoginTests {
              "\"action\": \"login\"," +
              "\"data\": {" +
                  "\"email\": \"jcena@gmail.com\"," +
-                 "\"password\": \"null\"" +
+                 "\"password\": \"R2g@ff?G8\"" +
              "}" +
          "}";
 
@@ -75,7 +77,7 @@ public class LoginTests {
              "\"action\": \"login\"," +
              "\"data\": {" +
                  "\"email\": \"jcena@gmail.com\"," +
-                 "\"password\": \"null\"" +
+                 "\"password\": \"R2g@ff?G8\"" +
              "}" +
          "}";
         
@@ -91,7 +93,7 @@ public class LoginTests {
              "\"action\": \"login\"," +
              "\"data\": {" +
                  "\"email\": \"jolenmoore@gmail.com\"," +
-                 "\"password\": \"null\"" +
+                 "\"password\": \"R2g@ff?G8\"" +
              "}" +
          "}";
 

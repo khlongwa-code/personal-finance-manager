@@ -12,8 +12,6 @@ import java.util.Scanner;
 
 public class Client {
 
-
-
     public static void main(String[] args) {
         String host = "localhost";
         int portNumber = 5000;
@@ -44,6 +42,5 @@ public class Client {
         } catch(IOException e) {
             e.printStackTrace();
         }
-
     }
 }
