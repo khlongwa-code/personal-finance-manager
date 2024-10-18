@@ -24,4 +24,16 @@ public class UserInputsValidator {
                 "A-Z]{2,7}$";
         return email.matches(emailRegex);
     }
+
+    /**
+     * Validates if the password is in the correct format
+     * Passwrd should atleast be 8 characters long, have atleast one:
+     * -lower case and upper case alphabet, digit, symbol
+     * @param password The password to validate
+     * @return true if the password is in the correct format otherwise false
+     */
+    public boolean isValidPassword (String password) {
+        String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
+        return password.matches(passwordRegex);
+    }
 }
