@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import database.DataManager;
 import resources.SimulationClient;
 import resources.Utils;
 import resources.JsonClient;
@@ -17,6 +18,8 @@ public class RegistrationTests {
     private final static int DEFAULT_PORT = 5000;
     private final static String DEFAULT_IP = "localhost";
     private final SimulationClient serverClient = new JsonClient();
+    private DataManager dm = new DataManager();
+    private String testEmail = null;
 
     @BeforeEach
     public void connectToServer() {
@@ -25,6 +28,7 @@ public class RegistrationTests {
 
     @AfterEach
     public void disconnectFromServer() {
+        dm.clearDataByEmail(testEmail);
         serverClient.disconnect();
     }
 
@@ -34,12 +38,14 @@ public class RegistrationTests {
         assertTrue(serverClient.isConnected());
          
         String password = Utils.hashPassword("R2g@ff?G8");
+        testEmail = "test@gmail.com";
+
         String requestJson = "{" +
             "\"action\": \"register\"," +
             "\"data\": {" +
                 "\"firstname\": \"Kusasalakhe\"," +
                 "\"lastname\": \"Hlongwa\"," +
-                "\"email\": \"kusasalakhe.hlongwa@example.com\"," +
+                "\"email\": \"" + testEmail + "\"," +
                 "\"password\": \"" + password + "\"" +
             "}" +
         "}";
@@ -55,12 +61,14 @@ public class RegistrationTests {
         assertTrue(serverClient.isConnected());
 
         String password = Utils.hashPassword("R2g@ff?G8");
+        testEmail = "test2@gmail.com";
+
         String requestJson = "{" +
             "\"action\": \"register\"," +
             "\"data\": {" +
                 "\"firstname\": \"suguru\"," +
                 "\"lastname\": \"geto\"," +
-                "\"email\": \"sgeto@example.com\"," +
+                "\"email\": \"" + testEmail + "\"," +
                 "\"password\": \"" + password + "\"" +
             "}" +
         "}";
@@ -70,7 +78,7 @@ public class RegistrationTests {
             "\"data\": {" +
                 "\"firstname\": \"suguru\"," +
                 "\"lastname\": \"geto\"," +
-                "\"email\": \"sgeto@example.com\"," +
+                "\"email\": \"" + testEmail + "\"," +
                 "\"password\": \"" + password + "\"" +
             "}" +
         "}";

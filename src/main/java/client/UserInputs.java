@@ -121,13 +121,49 @@ public class UserInputs {
         }
     }
 
+    public String getTransactionType() {
+        String transactionType = null;
+        
+        while (true) {
+            System.out.println("Enter transaction type: ");
+            transactionType = scanner.nextLine();
+
+            if(validator.isValidTransType(transactionType)) {
+                return transactionType;
+            } else {
+                System.out.println("Invalid transaction type.");
+            }
+        }
+    }
+
+    public float getTransactionAmount() {
+        String  transactionAmount = null;
+        while (true) {
+            System.out.println("Enter transaction amount: ");
+            transactionAmount = scanner.nextLine();
+
+            if(validator.isNumber(transactionAmount)) {
+                return Float.parseFloat(transactionAmount);
+            } else {
+                System.out.println("Invalid transaction amount.");
+            }
+        }
+    }
+
+    public String transactionInfo() {
+        String transactionType = getTransactionType();
+        Float transactionAmount = getTransactionAmount();
+
+        return request.transaction(transactionType, transactionAmount, this.email);
+    }
+
     public String handleUserInputs(String userInput) {
         if (userInput.equals("register")) {
             return registrationInfo();
         } else if (userInput.equals("login")) {
             return loginInfo();
         } else {
-            return userCommands();
+            return transactionInfo();
         }
     }
 }

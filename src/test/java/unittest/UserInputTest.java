@@ -1,10 +1,12 @@
 package unittest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import client.UserInputs;
@@ -53,6 +55,17 @@ public class UserInputTest {
         UserInputs userInput = new UserInputs();
 
         assertEquals("Rb12@gl?]", userInput.getUserPassword());
+    }
+
+    @Test
+    public void testSimulateTransactions() {
+        String simulatedInput = "simulate\n";
+        InputStream in = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(in);
+
+        UserInputs userInput = new UserInputs();
+
+        //assertTrue(userInput.isValidAction(simulatedInput));
     }
 }
 

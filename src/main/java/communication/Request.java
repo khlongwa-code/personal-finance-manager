@@ -35,4 +35,17 @@ public class Request {
 
         return loginData.toString();
     }
+
+    public String transaction(String transactionType, Float transactionAmount, String email) {
+        JSONObject transData = new JSONObject();
+        JSONObject transaction = new JSONObject();
+
+        transaction.put("amount", transactionAmount);
+        transaction.put("transaction", transactionType);
+        transaction.put("email", email);
+        transData.put("action", "simulate-transactions");
+        transData.put("data", transaction);
+
+        return transData.toString();
+    }
 }

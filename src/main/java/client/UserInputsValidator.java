@@ -1,5 +1,8 @@
 package client;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class UserInputsValidator {
     /**
      * Validates if the name contains only alphabets.
@@ -35,5 +38,25 @@ public class UserInputsValidator {
     public boolean isValidPassword (String password) {
         String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
         return password.matches(passwordRegex);
+    }
+
+    /**
+     * Validates if the user input is a number
+     * @param input a string user input
+     * @return true if the input is a number else false
+     */
+    public boolean isNumber(String input) {
+        String inputRegex = "^(0|[1-9]\\d*)(\\.\\d{0,2})?$";
+        return input.matches(inputRegex);
+    }
+
+    /**
+     * Checks if the transaction type is valid
+     * @param transactionType
+     * @return true if the transaction type is valid else false
+     */
+    public boolean isValidTransType(String transactionType) {
+        List<String> types = Arrays.asList("income", "expense", "transfer");
+        return types.contains(transactionType);
     }
 }

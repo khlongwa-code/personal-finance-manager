@@ -60,4 +60,13 @@ public class DataManager {
             }
         }
     }
+
+    public void clearDataByEmail(String userEmail) {
+        if (connection != null) {
+            this.dai = QueryTool.getQuery(connection, DataAccessInterface.class);
+            dai.deleteDataByEmail(userEmail);
+        } else {
+            System.out.println("Connection failed!");
+        }
+    }
 }

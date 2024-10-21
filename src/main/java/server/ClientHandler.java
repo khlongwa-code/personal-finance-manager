@@ -50,7 +50,7 @@ public class ClientHandler extends Thread{
 
                 userEmail = extractUserEmail(clientMessage);
                 
-                if (isUserLoggedIn(userEmail)) {
+                if (isUserLoggedIn(userEmail, clientMessage)) {
                     writer.println(Response.login("ERROR", "You're already logged in!"));
                     continue;
                 }
@@ -83,16 +83,19 @@ public class ClientHandler extends Thread{
         Integer userId = null;
         String userEmail = null;
 
-        if (action.equals("login")) {
-            userEmail = new JSONObject(clientMessage).getJSONObject("data").getString("email");
-            userId = dai.getUserId(userEmail);
-        }
+        userEmail = new JSONObject(clientMessage).getJSONObject("data").getString("email");
+        userId = dai.getUserId(userEmail);
 
         return userId;
     }
 
-    private boolean isUserLoggedIn(String userEmail) {
-        return loggedInUsers.contains(userEmail);
+    private boolean isUserLoggedIn(String userEmail, String clientMessage) {
+        String action = new JSONObject(clientMessage).getString("action");
+
+        if (action.equals("login")) {
+            return loggedInUsers.contains(userEmail);
+        }
+        return false;
     }
 
     private String handleResponse(DataManager manager, DataAccessInterface dai,
@@ -103,7 +106,7 @@ public class ClientHandler extends Thread{
     private String extractUserEmail(String clientMessage) {
         String action = new JSONObject(clientMessage).getString("action");
 
-        if (action.equals("login")) {
+        if (action.equals("login") || action.equals("simulate-transactions")) {
             return new JSONObject(clientMessage).getJSONObject("data").getString("email");
         }
         return null;

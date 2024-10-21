@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import database.DataManager;
 import resources.SimulationClient;
 import resources.Utils;
 import resources.JsonClient;
@@ -17,17 +18,21 @@ public class LoginTests {
     private final static int DEFAULT_PORT = 5000;
     private final static String DEFAULT_IP = "localhost";
     private final SimulationClient serverClient = new JsonClient();
+    private DataManager dm = new DataManager();
+    private String testEmail = null;
 
     @BeforeEach
     public void connectToServer() {
         serverClient.connect(DEFAULT_IP, DEFAULT_PORT);
         String password = Utils.hashPassword("R2g@ff?G8");
+        testEmail = "testlogin@gmail.com";
+
         String requestRegister = "{" +
              "\"action\": \"register\"," +
              "\"data\": {" +
                  "\"firstname\": \"john\"," +
                  "\"lastname\": \"cena\"," +
-                 "\"email\": \"jcena@gmail.com\"," +
+                 "\"email\": \"" + testEmail + "\"," +
                  "\"password\": \"" + password + "\"" +
              "}" +
          "}";
@@ -37,6 +42,7 @@ public class LoginTests {
 
     @AfterEach
     public void disconnectFromServer() {
+        dm.clearDataByEmail(testEmail);
         serverClient.disconnect();
     }
 
@@ -48,7 +54,7 @@ public class LoginTests {
         String requestLogin = "{" +
              "\"action\": \"login\"," +
              "\"data\": {" +
-                 "\"email\": \"jcena@gmail.com\"," +
+                 "\"email\": \"" + testEmail + "\"," +
                  "\"password\": \"R2g@ff?G8\"" +
              "}" +
          "}";
@@ -65,7 +71,7 @@ public class LoginTests {
         String requestLogin = "{" +
              "\"action\": \"login\"," +
              "\"data\": {" +
-                 "\"email\": \"jcena@gmail.com\"," +
+                 "\"email\": \"" + testEmail + "\"," +
                  "\"password\": \"R2g@ff?G8\"" +
              "}" +
          "}";
@@ -76,7 +82,7 @@ public class LoginTests {
         String requestLogin2 = "{" +
              "\"action\": \"login\"," +
              "\"data\": {" +
-                 "\"email\": \"jcena@gmail.com\"," +
+                 "\"email\": \"" + testEmail + "\"," +
                  "\"password\": \"R2g@ff?G8\"" +
              "}" +
          "}";
@@ -88,11 +94,12 @@ public class LoginTests {
     @Test
     public void testLoginInvalidEmail() {
         assertTrue(serverClient.isConnected());
+        testEmail = "invalid@gmail.com";
 
         String requestLogin = "{" +
              "\"action\": \"login\"," +
              "\"data\": {" +
-                 "\"email\": \"jolenmoore@gmail.com\"," +
+                 "\"email\": \"" + testEmail + "\"," +
                  "\"password\": \"R2g@ff?G8\"" +
              "}" +
          "}";

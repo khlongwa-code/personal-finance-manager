@@ -66,6 +66,16 @@ public interface DataAccessInterface extends BaseQuery {
         + ")")
     public void createTransactionsTable();
 
+    @Update("CREATE TABLE IF NOT EXISTS distributions ("
+        + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        + "user_id INTEGER, "
+        + "amount REAL NOT NULL, "
+        + "type TEXT, "  // Type: 'income' or 'expense'
+        + "transaction_date DATETIME, "
+        + "FOREIGN KEY(user_id) REFERENCES users(id)"
+        + ")")
+    public void createDistributionTable();
+
     @Update("INSERT INTO users (name, surname, email, password) VALUES (?{1}, ?{2}, ?{3}, ?{4})")
     public void createUser(String name, String surname, String email, String password);
 
@@ -77,4 +87,10 @@ public interface DataAccessInterface extends BaseQuery {
 
     @Select("SELECT password FROM users WHERE email = ?{1}")
     public String getUserPassword(String email);
+
+    @Update("DELETE FROM users WHERE email = ?{1}")
+    public void deleteDataByEmail(String email);
+
+    @Update("INSERT INTO transactions (amount, type, user_id) VALUES (?{1}, ?{2}, ?{3})")
+    public void makeTransaction(Float amount, String type, int userId);
 }
