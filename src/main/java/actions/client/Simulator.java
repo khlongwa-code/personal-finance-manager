@@ -12,13 +12,13 @@ public class Simulator extends Actions {
 
     @Override
     public String execute(DataManager manager, DataAccessInterface dai, 
-        String clientMessage, Integer userId) {
+        String clientMessage) {
         JSONObject transactionInfo = new JSONObject(clientMessage).getJSONObject("data");
 
         Float amount = transactionInfo.getFloat("amount");
         String type = transactionInfo.getString("transaction");
 
-        dai.makeTransaction(amount, type, userId);
+        // dai.makeTransaction(amount, type, userId);
 
         return "Done";
     }

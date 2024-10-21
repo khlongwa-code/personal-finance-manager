@@ -26,6 +26,9 @@ public class ClientHandler extends Thread{
     private DataAccessInterface dai;
     private Actions action;
     private String userEmail;
+    private String response;
+    private String userAction;
+    private String clientMessage;
 
     public ClientHandler(Socket socket) {
         this.socket = socket;
@@ -42,73 +45,58 @@ public class ClientHandler extends Thread{
             manager = new DataManager();
             dai = manager.getDAI();
 
-            String clientMessage;
             userEmail = null;
+            response = null;
+            userAction = null;
 
             while ((clientMessage = reader.readLine()) != null) {
                 System.out.println(">>> Received: " + clientMessage);
 
-                userEmail = extractUserEmail(clientMessage);
-                
-                if (isUserLoggedIn(userEmail, clientMessage)) {
+                userAction = new JSONObject(clientMessage).getString("action");
+
+                if (userAction.equals("login") || userAction.equals("register")) {
+                    action = Actions.create(clientMessage);
+                    response = handleResponse(manager, dai, clientMessage);
+                    userEmail = extractUserEmail(clientMessage);
+                    
+                    writer.println(response);
+                    break;
+                } else {
+                    writer.println(Response.error("ERROR", "Login or signup to continue"));
+                }
+            }
+
+            while ((clientMessage = reader.readLine()) != null) {
+                System.out.println(">>> Received: " + clientMessage);
+
+                userAction = new JSONObject(clientMessage).getString("action");
+
+                if (userEmail != null && userAction.equals("login")) {
                     writer.println(Response.login("ERROR", "You're already logged in!"));
                     continue;
                 }
 
-                Integer userId = setUserId(clientMessage, dai);
-                if (userId != null) {
-                    loggedInUsers.add(userEmail);
+                if (userEmail != null && userAction.equals("register")) {
+                    writer.println(Response.login("ERROR", "Logout to create a new account"));
+                    continue;
                 }
-                
+
                 action = Actions.create(clientMessage);
-                String response = handleResponse(manager, dai, clientMessage, userId);
+                response = handleResponse(manager, dai, clientMessage);
                 writer.println(response);
             }
         } catch (IOException e) {
             System.out.println("Client disconnected!");
-        } finally {
-            try {
-                socket.close();
-                if (userEmail != null) {
-                    loggedInUsers.remove(userEmail);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
-    }
-
-    private Integer setUserId(String clientMessage, DataAccessInterface dai) {
-        String action = new JSONObject(clientMessage).getString("action");
-        Integer userId = null;
-        String userEmail = null;
-
-        userEmail = new JSONObject(clientMessage).getJSONObject("data").getString("email");
-        userId = dai.getUserId(userEmail);
-
-        return userId;
-    }
-
-    private boolean isUserLoggedIn(String userEmail, String clientMessage) {
-        String action = new JSONObject(clientMessage).getString("action");
-
-        if (action.equals("login")) {
-            return loggedInUsers.contains(userEmail);
-        }
-        return false;
     }
 
     private String handleResponse(DataManager manager, DataAccessInterface dai,
-                                  String clientMessage, Integer userId) {
-        return action.execute(manager, dai, clientMessage, userId);
+                                  String clientMessage) {
+        return action.execute(manager, dai, clientMessage);
     }
 
     private String extractUserEmail(String clientMessage) {
-        String action = new JSONObject(clientMessage).getString("action");
 
-        if (action.equals("login") || action.equals("simulate-transactions")) {
-            return new JSONObject(clientMessage).getJSONObject("data").getString("email");
-        }
-        return null;
+        return new JSONObject(clientMessage).getJSONObject("data").getString("email");
     }
 }

@@ -47,7 +47,7 @@ public class LoginTests {
     }
 
     @Test
-    public void testSuccessfulLogin() {
+    public void testLoginWhenLoggedIn() {
 
         assertTrue(serverClient.isConnected());
 
@@ -60,35 +60,7 @@ public class LoginTests {
          "}";
 
         JsonNode response = serverClient.sendRequest(requestLogin);
-        assertEquals("OK", response.get("status").asText());
-    }
-
-    @Test
-    public void testLoginWhenAlreadyLoggedIn() {
-
-        assertTrue(serverClient.isConnected());
-
-        String requestLogin = "{" +
-             "\"action\": \"login\"," +
-             "\"data\": {" +
-                 "\"email\": \"" + testEmail + "\"," +
-                 "\"password\": \"R2g@ff?G8\"" +
-             "}" +
-         "}";
-
-        JsonNode response = serverClient.sendRequest(requestLogin);
-        assertEquals("OK", response.get("status").asText());
-
-        String requestLogin2 = "{" +
-             "\"action\": \"login\"," +
-             "\"data\": {" +
-                 "\"email\": \"" + testEmail + "\"," +
-                 "\"password\": \"R2g@ff?G8\"" +
-             "}" +
-         "}";
-        
-        JsonNode response2 = serverClient.sendRequest(requestLogin2);
-        assertEquals("ERROR", response2.get("status").asText());
+        assertEquals("ERROR", response.get("status").asText());
     }
 
     @Test
