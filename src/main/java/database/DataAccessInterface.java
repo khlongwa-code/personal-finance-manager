@@ -52,10 +52,14 @@ public interface DataAccessInterface extends BaseQuery {
         + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
         + "user_id INTEGER, "
         + "monthly_budget REAL NOT NULL, "
+        + "needs_percentage REAL DEFAULT 50, "
+        + "wants_percentage REAL DEFAULT 30, "
+        + "savings_percentage REAL DEFAULT 10, " 
         + "date_created DATETIME, "
         + "FOREIGN KEY(user_id) REFERENCES users(id)"
         +")")
     public void createBudgetTable();
+
 
     @Update("CREATE TABLE IF NOT EXISTS transactions ("
         + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -70,9 +74,7 @@ public interface DataAccessInterface extends BaseQuery {
     @Update("CREATE TABLE IF NOT EXISTS distributions ("
         + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
         + "user_id INTEGER, "
-        + "amount REAL NOT NULL, "
-        + "type TEXT, "  // Type: 'income' or 'expense'
-        + "transaction_date DATETIME, "
+        + "set_date DATETIME, "
         + "FOREIGN KEY(user_id) REFERENCES users(id)"
         + ")")
     public void createDistributionTable();
@@ -100,4 +102,12 @@ public interface DataAccessInterface extends BaseQuery {
 
     @Update("INSERT INTO expenses (amount, category, date_spent, user_id) VALUES (?{1}, ?{2}, ?{3}, ?{4})")
     public void makeExpense(Float amount, String category, String date, int userId);
+
+    @Select("SELECT amount FROM income WHERE user_is = ?{1}")
+    public Float getUserAccountBalance(int userId);
+
+    @Select("SELECT needs_percentage, wants_percentage, savings_percentage "
+        + "FROM budget WHERE user_id = ?{1}")
+    public BudgetDAO getUserBudgetPercentages(int userId);
+
 }
