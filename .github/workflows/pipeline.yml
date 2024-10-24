@@ -165,19 +165,14 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
-      
-      - name: Create Tag
-        id: create_tag
-        run: |
-          TAG_NAME="v1.0.0"
+        with:
+          fetch-depth: 0
 
-          git tag $TAG_NAME
-          git push origin $TAG_NAME
-
-          echo "tag_name=$TAG_NAME" >> $GITHUB_ENV
-
-      - name: Notify about a new tag
-        run: echo "New tag created- ${{ steps.create_tag.outputs.tag_name }}"
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: false
   
   docker_build_push:
     needs: tag

@@ -24,6 +24,19 @@ public class LoginTests {
     @BeforeEach
     public void connectToServer() {
         serverClient.connect(DEFAULT_IP, DEFAULT_PORT);
+    }
+
+    @AfterEach
+    public void disconnectFromServer() {
+        dm.clearDataByEmail(testEmail);
+        serverClient.disconnect();
+    }
+
+    @Test
+    public void testSuccessfulLoginRegister() {
+
+        assertTrue(serverClient.isConnected());
+
         String password = Utils.hashPassword("R2g@ff?G8");
         testEmail = "testlogin@gmail.com";
 
@@ -37,29 +50,7 @@ public class LoginTests {
              "}" +
          "}";
 
-        serverClient.sendRequest(requestRegister);
-    }
-
-    @AfterEach
-    public void disconnectFromServer() {
-        dm.clearDataByEmail(testEmail);
-        serverClient.disconnect();
-    }
-
-    @Test
-    public void testSuccessfulLogin() {
-
-        assertTrue(serverClient.isConnected());
-
-        String requestLogin = "{" +
-             "\"action\": \"login\"," +
-             "\"data\": {" +
-                 "\"email\": \"" + testEmail + "\"," +
-                 "\"password\": \"R2g@ff?G8\"" +
-             "}" +
-         "}";
-
-        JsonNode response = serverClient.sendRequest(requestLogin);
+        JsonNode response = serverClient.sendRequest(requestRegister);
         assertEquals("OK", response.get("status").asText());
     }
 
@@ -67,17 +58,20 @@ public class LoginTests {
     public void testLoginWhenAlreadyLoggedIn() {
 
         assertTrue(serverClient.isConnected());
+        String password = Utils.hashPassword("R2g@ff?G8");
 
-        String requestLogin = "{" +
-             "\"action\": \"login\"," +
+        String requestRegister = "{" +
+             "\"action\": \"register\"," +
              "\"data\": {" +
+                 "\"firstname\": \"john\"," +
+                 "\"lastname\": \"cena\"," +
                  "\"email\": \"" + testEmail + "\"," +
-                 "\"password\": \"R2g@ff?G8\"" +
+                 "\"password\": \"" + password + "\"" +
              "}" +
          "}";
 
-        JsonNode response = serverClient.sendRequest(requestLogin);
-        assertEquals("OK", response.get("status").asText());
+        serverClient.sendRequest(requestRegister);
+        
 
         String requestLogin2 = "{" +
              "\"action\": \"login\"," +

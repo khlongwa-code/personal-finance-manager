@@ -49,19 +49,18 @@ public class ClientHandler extends Thread{
                 System.out.println(">>> Received: " + clientMessage);
 
                 userEmail = extractUserEmail(clientMessage);
-                
-                if (isUserLoggedIn(userEmail, clientMessage)) {
-                    writer.println(Response.login("ERROR", "You're already logged in!"));
+
+                String loginResponse = handleLoginRegister(clientMessage, userEmail);
+
+                if (loginResponse != null) {
+                    System.out.println("<< Response: " + loginResponse);
+                    writer.println(loginResponse);
                     continue;
                 }
 
-                Integer userId = setUserId(clientMessage, dai);
-                if (userId != null) {
-                    loggedInUsers.add(userEmail);
-                }
-                
                 action = Actions.create(clientMessage);
-                String response = handleResponse(manager, dai, clientMessage, userId);
+                String response = handleResponse(manager, dai, clientMessage);
+                System.out.println("<< Response: " + response);
                 writer.println(response);
             }
         } catch (IOException e) {
@@ -78,37 +77,44 @@ public class ClientHandler extends Thread{
         }
     }
 
-    private Integer setUserId(String clientMessage, DataAccessInterface dai) {
-        String action = new JSONObject(clientMessage).getString("action");
-        Integer userId = null;
-        String userEmail = null;
-
-        userEmail = new JSONObject(clientMessage).getJSONObject("data").getString("email");
-        userId = dai.getUserId(userEmail);
-
-        return userId;
-    }
-
-    private boolean isUserLoggedIn(String userEmail, String clientMessage) {
-        String action = new JSONObject(clientMessage).getString("action");
-
-        if (action.equals("login")) {
-            return loggedInUsers.contains(userEmail);
-        }
-        return false;
-    }
-
     private String handleResponse(DataManager manager, DataAccessInterface dai,
-                                  String clientMessage, Integer userId) {
-        return action.execute(manager, dai, clientMessage, userId);
+                                  String clientMsg) {
+        if (!loggedInUsers.contains(userEmail)) {
+            return Response.login("ERROR", "Login or signup to continue...");
+        }
+        return action.execute(manager, dai, clientMsg);
     }
 
-    private String extractUserEmail(String clientMessage) {
-        String action = new JSONObject(clientMessage).getString("action");
+    private String extractUserEmail(String clientMsg) {
+        return new JSONObject(clientMsg).getJSONObject("data").getString("email");
+    }
 
-        if (action.equals("login") || action.equals("simulate-transactions")) {
-            return new JSONObject(clientMessage).getJSONObject("data").getString("email");
+    private String handleLoginRegister(String clientMsg, String email) {
+        String request = new JSONObject(clientMsg).getString("action");
+        boolean login = request.equalsIgnoreCase("login");
+        boolean register = request.equalsIgnoreCase("register");
+
+        if (login || register) {
+            boolean success = proccessLoginOrRegister(login, register, email);
+
+            if (!success && login) {
+                return Response.login("ERROR", "Login failed!");
+            }
+
+            if  (!success && register) {
+                return Response.register("ERROR", "Registration failed! " + register);
+            }
+            loggedInUsers.add(email);
+            return null;
         }
         return null;
+    }
+
+    private boolean proccessLoginOrRegister(boolean login, boolean register, String email) {
+
+        if (loggedInUsers.isEmpty() && (login || register)) {
+            return true;
+        }
+        return false;
     }
 }

@@ -14,7 +14,7 @@ public class Login extends Actions{
 
     @Override
     public String execute(DataManager manager, DataAccessInterface dai, 
-        String clientMessage, Integer userId) {
+        String clientMessage) {
 
         JSONObject userData = new JSONObject(clientMessage).getJSONObject("data");
         String userEmail = userData.getString("email");
