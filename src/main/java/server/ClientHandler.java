@@ -26,6 +26,9 @@ public class ClientHandler extends Thread{
     private DataAccessInterface dai;
     private Actions action;
     private String userEmail;
+    private String response;
+    private String userAction;
+    private String clientMessage;
 
     public ClientHandler(Socket socket) {
         this.socket = socket;
@@ -42,8 +45,9 @@ public class ClientHandler extends Thread{
             manager = new DataManager();
             dai = manager.getDAI();
 
-            String clientMessage;
             userEmail = null;
+            response = null;
+            userAction = null;
 
             while ((clientMessage = reader.readLine()) != null) {
                 System.out.println(">>> Received: " + clientMessage);

@@ -21,7 +21,7 @@ public class Simulator extends Actions {
         Float amount = transactionInfo.getFloat("amount");
         String type = transactionInfo.getString("transaction");
 
-        dai.makeTransaction(amount, type, userId);
+        // dai.makeTransaction(amount, type, userId);
 
         return "Done";
     }

@@ -166,4 +166,25 @@ public class UserInputs {
             return transactionInfo();
         }
     }
+
+    public String handleLoginRegister(String userInput) {
+        String request = null;
+
+        if (userInput.equals("register")) {
+            request = registrationInfo();
+        } else if (userInput.equals("login")) {
+            request = loginInfo();
+        }
+
+        return request;
+    }
+
+    public String handleUSerActions(String userInput) {
+        String request = null;
+
+        if (userInput.equals("simulate")) {
+            request = transactionInfo();
+        }
+        return request;
+    }
 }
