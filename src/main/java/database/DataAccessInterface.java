@@ -1,5 +1,7 @@
 package database;
 
+import java.time.LocalDateTime;
+
 import net.lemnik.eodsql.BaseQuery;
 import net.lemnik.eodsql.Select;
 import net.lemnik.eodsql.Update;
@@ -10,8 +12,7 @@ public interface DataAccessInterface extends BaseQuery {
         + "name TEXT NOT NULL, "
         + "surname TEXT NOT NULL, "
         + "email TEXT NOT NULL UNIQUE, "
-        + "password TEXT NOT NULL, "
-        + "created_at DATETIME DEFAULT CURRENT_TIMESTAMP"
+        + "password TEXT NOT NULL"
         +")")
     public void createUsersTable();
 
@@ -91,6 +92,12 @@ public interface DataAccessInterface extends BaseQuery {
     @Update("DELETE FROM users WHERE email = ?{1}")
     public void deleteDataByEmail(String email);
 
-    @Update("INSERT INTO transactions (amount, type, user_id) VALUES (?{1}, ?{2}, ?{3})")
-    public void makeTransaction(Float amount, String type, int userId);
+    @Update("INSERT INTO transactions (amount, type, transaction_date, user_id) VALUES (?{1}, ?{2}, ?{3}, ?{4})")
+    public void makeTransaction(Float amount, String type, String date, int userId);
+
+    @Update("INSERT INTO income (amount, source, date_received, user_id) VALUES (?{1}, ?{2}, ?{3}, ?{4})")
+    public void makeIncome(Float amount, String source, String date, int userId);
+
+    @Update("INSERT INTO expenses (amount, category, date_spent, user_id) VALUES (?{1}, ?{2}, ?{3}, ?{4})")
+    public void makeExpense(Float amount, String category, String date, int userId);
 }

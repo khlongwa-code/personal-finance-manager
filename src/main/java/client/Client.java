@@ -28,34 +28,30 @@ public class Client {
 
             InputStream input = socket.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-
-            do {
-                System.out.println("Login or register to continue...");
-                String userInput = scanner.nextLine();
-
-                String request = inputs.handleLoginRegister(userInput);
-                writer.println(request);
-                String serverResponse = reader.readLine();
-
-                if (serverResponse.contains("OK")) {
-                    loggedIn = true;
-                }
-
-                System.out.println(serverResponse);
-
-            } while (!loggedIn);
+            
 
             while (true) {
-                System.out.println("What do you want to do?: ");
-                String userInput = scanner.nextLine();
+                String userInput = null;
+                if (!loggedIn) {
+                    System.out.println("Enter 'Login' or 'register' to continue...");
+                    userInput = scanner.nextLine();
 
-                if (userInput.equalsIgnoreCase("login") || userInput.equalsIgnoreCase("register")) {
-                    System.out.println("Forbiddin action, logout first!");
-                    continue;
+                    if (userInput.equalsIgnoreCase("login") || userInput.equalsIgnoreCase("register")) {
+                        String request = inputs.handleUserInputs(userInput);
+                        writer.println(request);
+                        String serverResponse = reader.readLine();
+                        System.out.println(serverResponse);
+
+                        loggedIn = true;
+                    } else {
+                        continue;
+                    }
                 }
 
-                String request = inputs.handleUSerActions(userInput);
-
+                System.out.println("Enter your request: ");
+                userInput = scanner.nextLine();
+                
+                String request = inputs.handleUserInputs(userInput);
                 writer.println(request);
                 String serverResponse = reader.readLine();
                 System.out.println(serverResponse);

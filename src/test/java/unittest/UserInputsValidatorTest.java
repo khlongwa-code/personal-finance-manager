@@ -53,9 +53,21 @@ public class UserInputsValidatorTest {
     public void testValidPassword() {
         assertTrue(validator.isValidPassword("Rb12@gl?]"));
     }
+    
+    @Test
+    public void testValidTransactionType() {
+        assertTrue(validator.isValidTransType("transfer"));
+        assertTrue(validator.isValidTransType("income"));
+        assertTrue(validator.isValidTransType("expense"));
+    }
 
-    // @Test
-    // public void guidTest() {
-    //     assertEquals(1, 2);
-    // }
+    @Test
+    public void testInvalidTransactionType() {
+        assertFalse(validator.isValidTransType("anything"));
+    }
+
+    @Test
+    public void guidTest() {
+        assertEquals(1, 2);
+    }
 }

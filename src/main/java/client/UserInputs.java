@@ -85,10 +85,10 @@ public class UserInputs {
         String password2 = "";
 
         while (true) {
-            System.out.println("Enter passsword: ");
+            System.out.println("Enter password: ");
             password1 = scanner.nextLine();
 
-            System.out.println("Confirm passsword: ");
+            System.out.println("Confirm password: ");
             password2 = scanner.nextLine();
 
             if (!password1.equals(password2)) {
@@ -109,7 +109,7 @@ public class UserInputs {
         String password = "";
 
         while (true) {
-            System.out.println("Enter passsword: ");
+            System.out.println("Enter password: ");
             password = scanner.nextLine();
 
             if (validator.isValidPassword(password)) {
@@ -123,12 +123,23 @@ public class UserInputs {
 
     public String getTransactionType() {
         String transactionType = null;
+        String reference = null;
         
         while (true) {
             System.out.println("Enter transaction type: ");
             transactionType = scanner.nextLine();
 
             if(validator.isValidTransType(transactionType)) {
+                if (transactionType.equalsIgnoreCase("income")) {
+                    System.out.println("Enter source reference: ");
+                    reference = scanner.nextLine();
+                    return transactionType + " " + reference;
+                }
+                if (transactionType.equalsIgnoreCase("expense")) {
+                    System.out.println("Enter category: ");
+                    reference = scanner.nextLine();
+                    return transactionType + " " + reference;
+                }
                 return transactionType;
             } else {
                 System.out.println("Invalid transaction type.");
