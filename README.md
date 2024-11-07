@@ -55,9 +55,9 @@ includes both client and server components.
 The Finance Manager application runs via a set of commands that allow users to interact with and manage financial data. 
 Commands follow a pattern based on the action required: ```login```, ```register```, ```view```, ```make```, ```clear```, or ```update```.
 
-### Run Server and Client
+1. Run Server and Client
 
-    ```bash
+   ```bash
     make server
     make client
 
