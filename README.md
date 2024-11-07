@@ -55,12 +55,19 @@ includes both client and server components.
 The Finance Manager application runs via a set of commands that allow users to interact with and manage financial data. 
 Commands follow a pattern based on the action required: ```login```, ```register```, ```view```, ```make```, ```clear```, or ```update```.
 
-## Authentication Commands
+### Run Server and Client
+
+    ```bash
+    make server
+    make client
+
+
+### Authentication Commands
 
 - ```login```: Log in to an existing account.
 - ```register```:  Register a new account.
 
-## View Commands
+### View Commands
 
 Use these commands to view different aspects of your finances:
 
@@ -70,7 +77,7 @@ Use these commands to view different aspects of your finances:
 - ```view income```: View all income sources.
 - ```view savings```: View your savings information.
 
-## Make Commands
+### Make Commands
 
 Create new records for managing finances:
 
@@ -80,7 +87,7 @@ Create new records for managing finances:
 - ```make income```: Add a new source of income.
 - ```make transaction```: Record a transaction.
 
-## Clear Commands
+### Clear Commands
 
 Delete specific financial data:
 
@@ -89,7 +96,7 @@ Delete specific financial data:
 - ```clear savings```: Clear all savings records.
 - ```clear transactions```: Clear transaction history.
 
-## Update Commands
+### Update Commands
 
 Modify existing financial data:
 
@@ -112,7 +119,7 @@ that all commands work as expected.
 
 - To run the tests:
    ```bash
-   mvn test
+   make build
 
 ## Development and CI/CD Pipeline
 
